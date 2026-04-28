@@ -1,33 +1,44 @@
-// setup
-const express = require('express')
+const express = require("express");
+const Song = require("./models/song");
 var cors = require('cors')
-const bodyParser = require('body-parser')
-const Song = require('./models/songs')
 
-const app = express()
-
-// tells app variable to be an express server
+const app = express();
 app.use(cors())
-app.use(bodyParser.json())
 
-const router = express.Router()
+// Middleware that parses HTTP requests with JSON body
+app.use(express.json());
 
-//grab all songs in db
-router.get('/songs', (req, res) => {
-    let query = {}
-    if (req.query.genre) {
-        query = {genre: req.query.genre}
-    }
+const router = express.Router();
 
-    Song.find(query, function(err, songs) {
-        if (err) {
-            res.status(400).send(err)
-        } else {
-            res.json(songs)
-        }
-    })
+// Get list of all songs in the database
+router.get("/songs", async(req,res) =>{
+   try{
+      const songs = await Song.find({})
+      res.send(songs)
+      console.log(songs)
+   }
+   catch (err){
+      console.log(err)
+   }
+
 })
 
-// all requests that use an api start with //api
-app.use('/api', router)
-app.listen(3000)
+router.post("/songs", async(req,res) =>{
+   try{
+      const song = await new Song(req.body)
+      await song.save()
+      res.status(201).json(song)
+      console.log(song)
+   }
+   catch(err){
+      res.status(400).send(err)
+
+   }
+      
+   
+})
+
+
+app.use("/api", router);
+
+app.listen(3000);

@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose')
+mongoose.connect("mongodb+srv://sdev255:Password255@songs.lrgvbge.mongodb.net/?appName=Songs")
+  .then(() => console.log('Connected to MongoDB'))
+  .catch(err => console.error('MongoDB connection error:', err));
 
-// Connect to MongoDB
-mongoose.connect('mongodb+srv://sdev255:<Password255>@songdb.cmblpw5.mongodb.net/?appName=SongDb');
-
-module.exports = mongoose;
+module.exports = mongoose
